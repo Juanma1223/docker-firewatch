@@ -6,7 +6,7 @@ docker build -t docker-firewatch .
 
 ## Run it
 
-docker run -v /var/run/docker.sock:/var/run/docker.sock --net=host --name docker-firewatch docker-firewatch
+docker run -e PORT=4200 -v /var/run/docker.sock:/var/run/docker.sock --net=host --name docker-firewatch docker-firewatch
 
 # Developing
 
