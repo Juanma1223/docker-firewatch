@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_TAG = 'docker-firewatch'
-        DOCKER_API_VERSION = '1.39'
+        DOCKER_API_VERSION = '1.41'
     }
     stages {
         stage('Build') {
