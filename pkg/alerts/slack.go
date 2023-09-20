@@ -54,6 +54,7 @@ func SendSlack(message string) {
 	}
 
 	fmt.Println("Sent slack via webhook:" + alertsConfig.SlackWebhook)
+	fmt.Println(res)
 
 	defer res.Body.Close()
 }
