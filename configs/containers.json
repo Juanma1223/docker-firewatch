@@ -1,0 +1,7 @@
+{
+    "hostMachine":"prod-vm",
+    "watchedContainers":["mysql"],
+    "watchAllContainers":false,
+    "restartContainers":true,
+    "sendAlert":true
+}
