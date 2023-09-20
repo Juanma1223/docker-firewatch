@@ -3,6 +3,8 @@ package routes
 import (
 	"docker-alarms/api/server/handlers"
 	"docker-alarms/api/server/helpers/responseHelper"
+	"docker-alarms/configs"
+	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -13,7 +15,14 @@ type ContainersConfRouter struct {
 }
 
 func (cr *ContainersConfRouter) UpdateContainersConf(w http.ResponseWriter, r *http.Request) {
-	status := handlers.UpdateContainersConf()
+	editConfig := configs.ContainersConf{}
+	err := json.NewDecoder(r.Body).Decode(&editConfig)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		responseHelper.ResponseStatusChecker(w, INTERNAL_SERVER_ERROR)
+		return
+	}
+	status := handlers.UpdateContainersConf(editConfig)
 	resp, err := responseHelper.ResponseBuilder(status.Index(), status.String(), nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

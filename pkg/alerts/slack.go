@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"bytes"
+	"docker-alarms/configs"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,17 +10,13 @@ import (
 	"os"
 )
 
-type AlertsConfig struct {
-	SlackWebhook string
-}
-
 type SlackMessage struct {
 	Message string `json:"text"`
 }
 
 func SendSlack(message string) {
 
-	configFile, err := os.Open("/go/bin/alerts.json")
+	configFile, err := os.Open(os.Getenv("CONFIG_FILES_DIR") + "alerts.json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -29,7 +26,7 @@ func SendSlack(message string) {
 		fmt.Println(err)
 	}
 
-	alertsConfig := AlertsConfig{}
+	alertsConfig := configs.AlertsConfig{}
 
 	json.Unmarshal(configFileBytes, &alertsConfig)
 
@@ -52,9 +49,6 @@ func SendSlack(message string) {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("Sent slack via webhook:" + alertsConfig.SlackWebhook)
-	fmt.Println(res)
 
 	defer res.Body.Close()
 }

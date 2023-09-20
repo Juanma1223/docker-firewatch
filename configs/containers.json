@@ -1,7 +1,9 @@
 {
-    "hostMachine":"prod-vm",
-    "watchedContainers":[""],
-    "watchAllContainers":true,
-    "restartContainers":true,
-    "sendAlert":true
+    "WatchedContainers": [
+        "mysql",
+        "xd"
+    ],
+    "WatchAllContainers": false,
+    "RestartContainers": false,
+    "SendAlert": true
 }

@@ -13,5 +13,9 @@ var ERR_ALREADY_COMMITTED = "already been committed"
 func New() http.Handler {
 	r := chi.NewRouter()
 
+	ccr := &ContainersConfRouter{}
+
+	r.Mount("/containers", ccr.Routes())
+
 	return r
 }

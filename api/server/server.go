@@ -21,7 +21,7 @@ func New(port string) (*Server, error) {
 	r := chi.NewRouter()
 
 	// Se monta como raiz la direccion "api"
-	r.Mount("/api/crv-requests", routes.New())
+	r.Mount("/api/docker-firewatch", routes.New())
 
 	serv := &http.Server{
 		Addr:              ":" + port,

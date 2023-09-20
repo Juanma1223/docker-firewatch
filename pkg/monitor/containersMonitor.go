@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"context"
+	"docker-alarms/configs"
 	"docker-alarms/pkg/alerts"
 	"encoding/json"
 	"fmt"
@@ -13,18 +14,11 @@ import (
 	"github.com/docker/docker/client"
 )
 
-type ConfigFile struct {
-	WatchedContainers  []string
-	WatchAllContainers bool
-	RestartContainers  bool
-	SendAlert          bool
-}
-
-var Config ConfigFile
+var Config configs.ContainersConf
 
 func MonitorContainers(cli *client.Client) {
 
-	configFile, err := os.Open("/go/bin/containers.json")
+	configFile, err := os.Open(os.Getenv("CONFIG_FILES_DIR") + "containers.json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -81,5 +75,7 @@ func ContainerDownProcedure(containerInfo types.Container, cli *client.Client) {
 			fmt.Println(err)
 		}
 	}
-	alerts.SendSlack("Container down! " + containerInfo.Names[0] + ", restarting it...")
+	if Config.SendAlert {
+		alerts.SendSlack("Container down! " + containerInfo.Names[0] + ", restarting it...")
+	}
 }
