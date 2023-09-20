@@ -1,8 +1,8 @@
 package configs
 
 type ContainersConf struct {
-	WatchedContainers  []string
-	WatchAllContainers bool
-	RestartContainers  bool
-	SendAlert          bool
+	WatchedContainers  []string `json:"watchedContainers"`
+	WatchAllContainers bool     `json:"watchAllContainers"`
+	RestartContainers  bool     `json:"restartContainers"`
+	SendAlert          bool     `json:"sendAlert"`
 }
