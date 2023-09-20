@@ -1,5 +1,5 @@
 package configs
 
 type AlertsConfig struct {
-	SlackWebhook string
+	SlackWebhook string `json:"slackWebhook"`
 }

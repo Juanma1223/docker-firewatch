@@ -14,8 +14,10 @@ func New() http.Handler {
 	r := chi.NewRouter()
 
 	ccr := &ContainersConfRouter{}
+	acr := &AlertsConfRouter{}
 
 	r.Mount("/containers", ccr.Routes())
+	r.Mount("/alerts", acr.Routes())
 
 	return r
 }
