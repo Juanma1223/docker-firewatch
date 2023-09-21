@@ -76,6 +76,8 @@ func ContainerDownProcedure(containerInfo types.Container, cli *client.Client) {
 		}
 	}
 	if Config.SendAlert {
+		reader, err := cli.ContainerLogs(context.TODO(), containerInfo.ID, types.ContainerLogsOptions{})
+		
 		alerts.SendSlack("Container down! " + containerInfo.Names[0] + ", restarting it...")
 	}
 }

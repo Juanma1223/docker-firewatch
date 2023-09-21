@@ -11,10 +11,16 @@ import (
 )
 
 type SlackMessage struct {
-	Message string `json:"text"`
+	MessageStruct []MessageBlock
 }
 
-func SendSlack(message string) {
+type MessageBlock struct {
+	Type   string         `json:"type"`
+	Text   interface{}    `json:"text"`
+	Fields []MessageBlock `json:"fields,omitempty"`
+}
+
+func SendSlack(messageHeader, messageBody string) {
 
 	configFile, err := os.Open(os.Getenv("CONFIG_FILES_DIR") + "alerts.json")
 	if err != nil {
@@ -30,11 +36,32 @@ func SendSlack(message string) {
 
 	json.Unmarshal(configFileBytes, &alertsConfig)
 
-	slackMessage := SlackMessage{
-		Message: message,
+	messageHeaderBlock := MessageBlock{
+		Type: "header",
+		Text: MessageBlock{
+			Type: "plain_text",
+			Text: messageHeader,
+		},
 	}
 
-	body, _ := json.Marshal(slackMessage)
+	messageBodyBlock := MessageBlock{
+		Type: "section",
+		Fields: []MessageBlock{
+			{
+				Type: "mrkdown",
+				Text: "\n" + messageBody,
+			},
+		},
+	}
+
+	message := SlackMessage{
+		[]MessageBlock{
+			messageHeaderBlock,
+			messageBodyBlock,
+		},
+	}
+
+	body, _ := json.Marshal(message)
 	bodyReader := bytes.NewReader(body)
 
 	// Create a HTTP post request
