@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"bytes"
 	"context"
 	"docker-alarms/configs"
 	"docker-alarms/pkg/alerts"
@@ -76,8 +77,21 @@ func ContainerDownProcedure(containerInfo types.Container, cli *client.Client) {
 		}
 	}
 	if Config.SendAlert {
-		reader, err := cli.ContainerLogs(context.TODO(), containerInfo.ID, types.ContainerLogsOptions{})
-		
-		alerts.SendSlack("Container down! " + containerInfo.Names[0] + ", restarting it...")
+		reader, err := cli.ContainerLogs(context.TODO(), containerInfo.ID, types.ContainerLogsOptions{
+			ShowStdout: true,
+			ShowStderr: true,
+			Tail:       "20",
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(reader)
+		respBytes := buf.String()
+
+		logs := string(respBytes)
+
+		alerts.SendSlack("Container down! "+containerInfo.Names[0]+", restarting it...", logs)
 	}
 }

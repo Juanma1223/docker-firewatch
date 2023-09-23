@@ -10,13 +10,13 @@ import (
 	"os"
 )
 
-type SlackMessage struct {
-	MessageStruct []MessageBlock
+type Blocks struct {
+	Blocks []MessageBlock `json:"blocks"`
 }
 
 type MessageBlock struct {
 	Type   string         `json:"type"`
-	Text   interface{}    `json:"text"`
+	Text   interface{}    `json:"text,omitempty"`
 	Fields []MessageBlock `json:"fields,omitempty"`
 }
 
@@ -48,14 +48,14 @@ func SendSlack(messageHeader, messageBody string) {
 		Type: "section",
 		Fields: []MessageBlock{
 			{
-				Type: "mrkdown",
-				Text: "\n" + messageBody,
+				Type: "plain_text",
+				Text: messageBody,
 			},
 		},
 	}
 
-	message := SlackMessage{
-		[]MessageBlock{
+	message := Blocks{
+		Blocks: []MessageBlock{
 			messageHeaderBlock,
 			messageBodyBlock,
 		},
@@ -73,6 +73,10 @@ func SendSlack(messageHeader, messageBody string) {
 
 	client := &http.Client{}
 	res, err := client.Do(r)
+	if res.StatusCode != http.StatusOK {
+		fmt.Println("Error while sending slack notification, status code:", res.StatusCode)
+		fmt.Println("Body:", string(body))
+	}
 	if err != nil {
 		panic(err)
 	}

@@ -1,8 +1,8 @@
 {
     "WatchedContainers": [
-        ""
+        "mysql"
     ],
     "WatchAllContainers": false,
-    "RestartContainers": false,
+    "RestartContainers": true,
     "SendAlert": true
 }
