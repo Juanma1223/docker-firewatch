@@ -1,3 +1,5 @@
+# This sofware is intended to implement alerts and restart crashed docker containers automatically
+
 # Instructions to run 
 
 ## Build docker image with
