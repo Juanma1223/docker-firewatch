@@ -1,8 +1,1 @@
-{
-    "WatchedContainers": [
-        "mysql"
-    ],
-    "WatchAllContainers": false,
-    "RestartContainers": true,
-    "SendAlert": true
-}
+{"hostMachine":"juanma-test","watchedContainers":["mysql"],"watchAllContainers":false,"restartContainers":true,"sendAlert":true}
