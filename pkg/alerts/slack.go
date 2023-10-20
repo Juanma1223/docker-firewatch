@@ -2,10 +2,10 @@ package alerts
 
 import (
 	"bytes"
+	"docker-alarms/api/server/helpers/configParser"
 	"docker-alarms/configs"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 )
@@ -22,19 +22,13 @@ type MessageBlock struct {
 
 func SendSlack(messageHeader, messageBody string) {
 
-	configFile, err := os.Open(os.Getenv("CONFIG_FILES_DIR") + "alerts.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	configFileBytes, err := io.ReadAll(configFile)
-	if err != nil {
-		fmt.Println(err)
-	}
-
 	alertsConfig := configs.AlertsConfig{}
 
-	json.Unmarshal(configFileBytes, &alertsConfig)
+	containersConfig := configs.ContainersConf{}
+
+	configParser.ParseConfigFile(os.Getenv("CONFIG_FILES_DIR")+"alerts.json", &alertsConfig)
+
+	configParser.ParseConfigFile(os.Getenv("CONFIG_FILES_DIR")+"containers.json", &containersConfig)
 
 	messageHeaderBlock := MessageBlock{
 		Type: "header",
@@ -47,6 +41,10 @@ func SendSlack(messageHeader, messageBody string) {
 	messageBodyBlock := MessageBlock{
 		Type: "section",
 		Fields: []MessageBlock{
+			{
+				Type: "mrkdwn",
+				Text: ":desktop_computer: *Server: " + containersConfig.HostMachine + "*",
+			},
 			{
 				Type: "plain_text",
 				Text: messageBody,

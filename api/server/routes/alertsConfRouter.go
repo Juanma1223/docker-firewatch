@@ -50,6 +50,7 @@ func (ar *AlertsConfRouter) Routes() http.Handler {
 	}))
 
 	r.Put("/", ar.UpdateAlertsConf)
+	r.Options("/", ar.UpdateAlertsConf)
 
 	return r
 }
