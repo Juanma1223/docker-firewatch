@@ -6,9 +6,7 @@ import (
 	"docker-alarms/api/server/helpers/configParser"
 	"docker-alarms/configs"
 	"docker-alarms/pkg/alerts"
-	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -22,17 +20,7 @@ var ContainersDown map[string]bool = make(map[string]bool)
 
 func MonitorContainers(cli *client.Client) {
 
-	configFile, err := os.Open(os.Getenv("CONFIG_FILES_DIR") + "containers.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	configFileBytes, err := io.ReadAll(configFile)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	json.Unmarshal(configFileBytes, &Config)
+	configParser.ParseConfigFile(os.Getenv("CONFIG_FILES_DIR")+"containers.json", &Config)
 
 	watchedContainers := make(map[string]bool)
 
